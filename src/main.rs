@@ -1,14 +1,16 @@
 
+extern crate walkdir;
+
 use std::io::{stdin, stdout, Write};
 use std::env;
 use std::path::Path;
-use std::fs;
+use walkdir::{DirEntry, WalkDir};
 
 fn main() {
 
     let mut input = String::new();
     println!("Change directory? (Y/N)");
-    stdin().read_line(&mut input).expect("Did not enter a string");
+    stdin().read_line(&mut input).expect("Invalid string");
 
     let input = input.trim();
 
@@ -28,14 +30,19 @@ fn main() {
 }
 
 fn scan_dir(){
-    let mut input = String::new();
-    println!("Enter the file type to search for (.py, .docx, .java etc)");
-    stdin().read_line(&mut input).expect("Did not enter a string");
+    let file_type = String::new();
+    println!("Enter file type: ");
+    stdin().read_line(&mut file_type).expect("Invalid string");
 
-    let input = input.trim();
-    let paths = fs::read_dir("./").unwrap();
- 
-    for path in paths {
-
+    for entry in Walkdir::new(file_type).into_iter().filter_entry(|e| !is_hiden(e))){
+        let entry = entry.unwrap();
+        if entry.ends_with(file_type){
+            println!("Found: {}", entry.path().display())
+        }
     }
+}
+
+
+fn is_hiden(entry: &DirEntry) -> bool {
+    entry.file_name().to_str().map(|s| s.starts_with(".")).unwrap_or(false)
 }
