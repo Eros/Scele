@@ -34,7 +34,7 @@ fn scan_dir(){
     println!("Enter file type: ");
     stdin().read_line(&mut file_type).expect("Invalid string");
 
-    for entry in Walkdir::new(file_type).into_iter().filter_entry(|e| !is_hiden(e))){
+    for entry in Walkdir::new(file_type).into_iter().filter_entry(|e| !is_hidden(e))){
         let entry = entry.unwrap();
         if entry.ends_with(file_type){
             println!("Found: {}", entry.path().display())
